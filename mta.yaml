@@ -1,42 +1,143 @@
 _schema-version: 3.3.0
 ID: invoice-approval-workflow
+description: A simple CAP project.
 version: 1.0.0
-description: "A simple CAP project."
+modules:
+- name: invoice-approval-workflow-srv
+  type: nodejs
+  path: gen/srv
+  requires:
+  - name: invoice-approval-workflow-db
+  provides:
+  - name: srv-api
+    properties:
+      srv-url: ${default-url}
+  parameters:
+    buildpack: nodejs_buildpack
+    instances: 1
+  build-parameters:
+    builder: npm-ci
+- name: invoice-approval-workflow-db-deployer
+  type: hdb
+  path: gen/db
+  requires:
+  - name: invoice-approval-workflow-db
+  parameters:
+    buildpack: nodejs_buildpack
+- name: invoice-approval-workflow
+  type: approuter.nodejs
+  path: app/router
+  requires:
+  - name: srv-api
+    group: destinations
+    properties:
+      forwardAuthToken: true
+      name: srv-api
+      url: ~{srv-url}
+  - name: invoice-approval-workflow-html5-runtime
+  - name: invoice-approval-workflow-portal
+  - name: invoice-approval-workflow-destination-service
+    group: destinations
+    properties:
+      forwardAuthToken: false
+      name: ui5
+      url: https://ui5.sap.com
+  provides:
+  - name: app-api
+    properties:
+      app-protocol: ${protocol}
+      app-uri: ${default-uri}
+  parameters:
+    disk-quota: 256M
+    keep-existing-routes: true
+    memory: 256M
+- name: invoice-approval-workflow-app-deployer
+  type: com.sap.application.content
+  path: gen
+  requires:
+  - name: srv-api
+  - name: invoice-approval-workflow-html5-repo-host
+    parameters:
+      config:
+        HTML5Runtime_enabled: true
+      content-target: true
+  build-parameters:
+    build-result: app/
+    requires:
+    - artifacts:
+      - project1.zip
+      name: project1
+      target-path: app/
+- name: invoice-approval-workflow-portal-deployer
+  type: com.sap.application.content
+  path: app/portal
+  requires:
+  - name: invoice-approval-workflow-portal
+    parameters:
+      content-target: true
+      service-key:
+        config:
+          content-endpoint: developer
+        name: invoice-approval-workflow-portal-key
+  - name: invoice-approval-workflow-html5-repo-host
+  - name: invoice-approval-workflow-app-deployer
+  deployed-after:
+  - invoice-approval-workflow-app-deployer
+- name: project1
+  type: html5
+  path: app/project1
+  build-parameters:
+    build-result: dist
+    builder: custom
+    commands:
+    - npm install
+    - npm run build:cf
+    supported-platforms: []
+resources:
+- name: invoice-approval-workflow-db
+  type: com.sap.xs.hdi-container
+  parameters:
+    service: hana
+    service-plan: hdi-shared
+- name: invoice-approval-workflow-html5-repo-host
+  type: org.cloudfoundry.managed-service
+  parameters:
+    service: html5-apps-repo
+    service-plan: app-host
+- name: invoice-approval-workflow-html5-runtime
+  type: org.cloudfoundry.managed-service
+  parameters:
+    service: html5-apps-repo
+    service-plan: app-runtime
+- name: invoice-approval-workflow-portal
+  type: org.cloudfoundry.managed-service
+  parameters:
+    service: portal
+    service-plan: standard
+- name: invoice-approval-workflow-destination-service
+  type: org.cloudfoundry.managed-service
+  parameters:
+    config:
+      HTML5Runtime_enabled: false
+      init_data:
+        instance:
+          destinations:
+          - Authentication: NoAuthentication
+            Name: ui5
+            ProxyType: Internet
+            Type: HTTP
+            URL: https://ui5.sap.com
+          existing_destinations_policy: update
+      version: 1.0.0
+    service: destination
+    service-name: invoice-approval-workflow-destination-service
+    service-plan: lite
 parameters:
+  deploy_mode: html5-repo
   enable-parallel-deployments: true
 build-parameters:
   before-all:
-    - builder: custom
-      commands:
-        - npm ci
-        - npx cds build --production
-modules:
-  - name: invoice-approval-workflow-srv
-    type: nodejs
-    path: gen/srv
-    parameters:
-      instances: 1
-      buildpack: nodejs_buildpack
-    build-parameters:
-      builder: npm-ci
-    provides:
-      - name: srv-api # required by consumers of CAP services (e.g. approuter)
-        properties:
-          srv-url: ${default-url}
-    requires:
-      - name: invoice-approval-workflow-db
-
-  - name: invoice-approval-workflow-db-deployer
-    type: hdb
-    path: gen/db
-    parameters:
-      buildpack: nodejs_buildpack
-    requires:
-      - name: invoice-approval-workflow-db
-
-resources:
-  - name: invoice-approval-workflow-db
-    type: com.sap.xs.hdi-container
-    parameters:
-      service: hana
-      service-plan: hdi-shared
+  - builder: custom
+    commands:
+    - npm ci
+    - npx cds build --production
