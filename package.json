@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "dependencies": {
     "@cap-js/hana": "^2",
-    "@sap/cds": "^9"
+    "@sap/cds": "^9",
+    "sqlite3": "^6.0.1"
   },
   "devDependencies": {
     "@cap-js/sqlite": "^2",
@@ -12,5 +13,19 @@
   "scripts": {
     "start": "cds-serve"
   },
-  "private": true
+  "private": true,
+  "cds": {
+    "requires": {
+      "[development]": {
+        "db": {
+          "kind": "sqlite"
+        }
+      },
+      "[production]": {
+        "db": {
+          "kind": "hana"
+        }
+      }
+    }
+  }
 }
