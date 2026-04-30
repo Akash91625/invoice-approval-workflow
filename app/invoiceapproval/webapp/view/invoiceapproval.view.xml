@@ -1,0 +1,61 @@
+<mvc:View controllerName="invoiceapproval.controller.invoiceapproval"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m">
+    <Page title="Invoice Approval Dashboard" id="2">
+    <content>
+    <HBox justifyContent="SpaceAround" class="sapUiMediumMargin" id="1">
+    <GenericTile header="Submitted Invoices" class="sapUiTinyMargin" id="4">
+    <TileContent id="5">
+    <NumericContent value="1" id="6"></NumericContent>
+    </TileContent>
+     </GenericTile>
+
+    <GenericTile header="Pending Approval" class="sapUiTinyMargin" id="9">
+    <TileContent id="8">
+    <NumericContent value="5" id="10"></NumericContent>
+    </TileContent>
+     </GenericTile>
+
+    <GenericTile header="Scheduled Payments" class="sapUiTinyMargin" id="11">
+    <TileContent id="13">
+    <NumericContent value="3" id="12"></NumericContent>
+    </TileContent>
+     </GenericTile>
+    </HBox>
+    <VBox id="csss" alignContent="Center" width="100%" class="sapUiMediumMarginBeginEnd">
+    
+    <Table id="invoiceTable" items="{/Invoices}">
+    
+    <columns>
+    
+    <Column id="19"><Text id="20"  text="Invoice No"></Text></Column>
+    <Column id="29"><Text id="30"  text="PO Number"></Text></Column>
+    <Column id="39"><Text id="40" text="Amount"></Text></Column>
+    <Column id="49"><Text id="50"  text="Status"></Text></Column>
+
+    </columns>
+    
+<items>
+
+<ColumnListItem id="54" type="Navigation"  press="onInvoicePress">
+<cells>
+<Text id="61" text="{invoiceNumber}"></Text>
+<Text id="62" text="{poNumber}"></Text>
+<Text id="63" text="{amount}"></Text>
+<Text id="64" text="{status}"></Text>
+
+</cells>
+</ColumnListItem>
+
+</items>
+
+    </Table>
+    
+    </VBox>
+    
+
+    </content>
+    </Page>
+
+
+</mvc:View>

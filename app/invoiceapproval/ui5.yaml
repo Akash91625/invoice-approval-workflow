@@ -2,7 +2,7 @@
 
 specVersion: "4.0"
 metadata:
-  name: project1
+  name: invoiceapproval
 type: application
 server:
   customMiddleware:
@@ -26,3 +26,8 @@ server:
       configuration:
         flp:
           theme: sap_horizon
+    # - name: ui5-middleware-simpleproxy
+    #   afterMiddleware: compression
+    #   configuration:
+    #     baseUri: "http://localhost:4004"
+    #     mountPath: "/odata"

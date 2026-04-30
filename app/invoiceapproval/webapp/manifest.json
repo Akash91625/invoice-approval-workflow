@@ -1,7 +1,7 @@
 {
   "_version": "1.84.0",
   "sap.app": {
-    "id": "project1",
+    "id": "invoiceapproval",
     "type": "application",
     "i18n": "i18n/i18n.properties",
     "applicationVersion": {
@@ -59,7 +59,7 @@
       "i18n": {
         "type": "sap.ui.model.resource.ResourceModel",
         "settings": {
-          "bundleName": "project1.i18n.i18n"
+          "bundleName": "invoiceapproval.i18n.i18n"
         }
       },
       "": {
@@ -87,9 +87,9 @@
         "transition": "slide",
         "type": "View",
         "viewType": "XML",
-        "path": "project1.view",
+        "path": "invoiceapproval.view",
         "async": true,
-        "viewPath": "project1.view"
+        "viewPath": "invoiceapproval.view"
       },
       "routes": [
         {
@@ -98,17 +98,27 @@
           "target": [
             "Targetinvoiceapproval"
           ]
+        },
+        {
+          "name":"RouteDetail",
+          "pattern": "detail/{invoiceId}",
+          "target":"targetDetail"
         }
       ],
       "targets": {
         "Targetinvoiceapproval": {
           "id": "invoiceapproval",
           "name": "invoiceapproval"
+        },
+        "targetDetail":{
+          "viewName": "invoiceDetail",
+          "id": "invoiceDetail",
+          "name": "invoiceDetail"
         }
       }
     },
     "rootView": {
-      "viewName": "project1.view.App",
+      "viewName": "invoiceapproval.view.App",
       "type": "XML",
       "id": "App",
       "async": true

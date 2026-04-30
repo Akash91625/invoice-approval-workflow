@@ -1,0 +1,30 @@
+<mvc:View controllerName="invoiceapproval.controller.invoiceDetail"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m">
+
+    <Page title="Invoice Detail" showNavButton="true" navButtonPress="onNavBack" id="sm">
+    
+    <content>
+    
+    <VBox class="sapUiMediumMargin" id="ss">
+    <Text text="Invoice Number: {/invoiceNumber}" id="41"></Text>
+    <Text text="PO Number: {/poNumber}" id="42"></Text>
+    <Text text="Amount: {/amount}" id="44"></Text>
+    <Text text="Status: {/status}" id="43"></Text>
+    
+    <HBox id="222" class="sapUiMedimMarginTop">
+    <Button text="Approve" type="Accept" id="432" press="onApprove"></Button>
+    <Button text="Reject" type="Reject" id="433" press="onReject" class="sapUiTinyMarginBegin"></Button>
+    
+    </HBox>
+
+
+    </VBox>
+    
+    </content>
+    
+    </Page>
+
+
+
+    </mvc:View>
